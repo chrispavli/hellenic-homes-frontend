@@ -15,12 +15,16 @@ interface Property {
 }
 
 async function getProperties(): Promise<Property[]> {
-  const res = await fetch(
-    `${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/properties?per_page=100`,
-    { next: { revalidate: 60 } }
-  );
-  if (!res.ok) return [];
-  return res.json();
+  try {
+    const res = await fetch(
+      `${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/properties?per_page=100`,
+      { next: { revalidate: 60 } }
+    );
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
 }
 
 export default async function Home() {
