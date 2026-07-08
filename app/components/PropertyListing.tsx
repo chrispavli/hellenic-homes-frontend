@@ -187,7 +187,7 @@ export default function PropertyListing({
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
             </select>
-            <div className="flex border border-sky-700 rounded-lg overflow-hidden">
+            <div className="border border-sky-700 rounded-lg overflow-hidden hidden sm:flex">
               <button
                 onClick={() => setView('grid')}
                 className={`p-2 transition-colors ${view === 'grid' ? 'bg-stone-800 text-white' : 'bg-white text-stone-400 hover:text-stone-600'}`}
