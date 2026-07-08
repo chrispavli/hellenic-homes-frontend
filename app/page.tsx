@@ -1,75 +1,43 @@
-import PropertyCard from './components/PropertyCard';
+import HeroSlide from './components/HeroSlide';
 
-interface Property {
-  id: number;
-  title: { rendered: string };
-  content: { rendered: string };
-  acf: {
-    price: string;
-    region: string;
-    bedrooms: string;
-    bathrooms: string;
-    property_type: string;
-    listing_type: string;
-  };
-}
-
-async function getProperties(): Promise<Property[]> {
-  try {
-    const res = await fetch(
-      `${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/properties?per_page=100`,
-      { next: { revalidate: 60 } }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
-export default async function Home() {
-  const properties = await getProperties();
-
-  const forSale = properties.filter((p) => p.acf.listing_type === 'sale');
-  const forRent = properties.filter((p) => p.acf.listing_type === 'rental');
-
+export default function Home() {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      {/* Hero */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold text-stone-800 mb-2">
-          Find your home in the Greek islands
-        </h1>
-        <p className="text-stone-500 text-lg">
-          {properties.length} {properties.length === 1 ? 'property' : 'properties'} available across the Aegean
-        </p>
+    <div>
+      <HeroSlide />
+
+      {/* Features */}
+      <div className="max-w-6xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+          <div className="flex flex-col items-center">
+            <div className="mb-4 text-stone-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.092 0L21.75 12M4.5 9.75v10.125A.375.375 0 004.875 20.25h4.875v-4.875a.375.375 0 01.375-.375h3a.375.375 0 01.375.375v4.875h4.875a.375.375 0 00.375-.375V9.75M8.25 20.25h7.5" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-stone-800 mb-2">Sales & Rentals</h3>
+            <p className="text-stone-500 text-sm">Long-term rentals and properties for sale across Greece and Cyprus.</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="mb-4 text-stone-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-stone-800 mb-2">Prime Locations</h3>
+            <p className="text-stone-500 text-sm">Handpicked properties in the most sought-after destinations across Greece and Cyprus.</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="mb-4 text-stone-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-stone-800 mb-2">Easy to Browse</h3>
+            <p className="text-stone-500 text-sm">Filter, sort and compare properties to find your perfect match.</p>
+          </div>
+        </div>
       </div>
-
-      {forSale.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-xl font-semibold text-stone-700 mb-5">Properties for Sale</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {forSale.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {forRent.length > 0 && (
-        <section>
-          <h2 className="text-xl font-semibold text-stone-700 mb-5">Properties for Rent</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {forRent.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {properties.length === 0 && (
-        <p className="text-stone-400 text-center py-20">No properties found.</p>
-      )}
     </div>
   );
 }

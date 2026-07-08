@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 interface Property {
   id: number;
   title: { rendered: string };
@@ -8,6 +10,9 @@ interface Property {
     bathrooms: string;
     property_type: string;
     listing_type: string;
+  };
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{ source_url: string; alt_text: string }>;
   };
 }
 
@@ -25,13 +30,24 @@ function formatPrice(price: string, listingType: string): string {
 }
 
 export default function PropertyCard({ property }: { property: Property }) {
-  const { acf, title } = property;
+  const { acf, title, _embedded } = property;
+  const image = _embedded?.['wp:featuredmedia']?.[0];
 
   return (
-    <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow group">
-      {/* Placeholder image area */}
-      <div className="h-44 bg-gradient-to-br from-sky-100 to-blue-200 flex items-center justify-center">
-        <span className="text-4xl">🏡</span>
+    <Link href={`/properties/${property.id}`} className="bg-white border border-stone-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow group block">
+      <div className="h-44 relative bg-gradient-to-br from-sky-100 to-blue-200">
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={image.source_url}
+            alt={image.alt_text || title.rendered}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <span className="text-4xl">🏡</span>
+          </div>
+        )}
       </div>
 
       <div className="p-5">
@@ -61,6 +77,6 @@ export default function PropertyCard({ property }: { property: Property }) {
           {formatPrice(acf.price, acf.listing_type)}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

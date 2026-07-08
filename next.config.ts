@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Allow self-signed certs from DDEV in development
-  experimental: {
-    serverActions: {
-      allowedOrigins: [],
-    },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'hellenic-homes.ddev.site',
+      },
+    ],
   },
 };
 
